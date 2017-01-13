@@ -1739,7 +1739,7 @@ bool AvalancheMicroscopic::TransportElectron(const double x0, const double y0,
   // Save the drift paths and photon tracks.
   if (m_useSaving) {
     // Electrons
-    int skippingFactor = 1000;
+    int skippingFactor = 1;
     for (int i=m_nElectronEndpoints; i--;) {
       const int np = (GetNumberOfElectronDriftLinePoints(i)-2)/skippingFactor + 2; // save start and ending point for sure
       if (np <= 0) continue;
