@@ -1759,7 +1759,7 @@ bool AvalancheMicroscopic::TransportElectron(const double x0, const double y0,
       m_saver->SetDriftLinePoint(jL, np-1, x, y, z, t);
 
       for (int jP=np-1; jP>=0; jP--) {
-        GetElectronDriftLinePoint(x, y, z, t, jP*skippingFactor, i);
+        GetElectronDriftLinePoint(x, y, z, t, jP*m_skippingFactor, i);
         m_saver->SetDriftLinePoint(jL, jP, x, y, z, t);
       }
     }
