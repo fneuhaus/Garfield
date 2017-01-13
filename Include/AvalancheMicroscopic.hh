@@ -37,6 +37,9 @@ class AvalancheMicroscopic {
   // Switch on/off drift line saving
   void EnableSaving(SaveDrift* save);
   void DisableSaving();
+  void SetSavingAutoEndEvent(bool val) { m_autoEndEvent = val; }
+  void SetSkippingFactor(int val) { m_skippingFactor = val; }
+  void SavingEndEvent();
 
   // Switch on/off calculation of induced currents
   void EnableSignalCalculation() { m_useSignal = true; }
@@ -232,6 +235,8 @@ class AvalancheMicroscopic {
   ViewDrift* m_viewer;
   bool m_useSaving;
   SaveDrift* m_saver;
+  int m_skippingFactor;
+  bool m_autoEndEvent;
   bool m_plotExcitations;
   bool m_plotIonisations;
   bool m_plotAttachments;

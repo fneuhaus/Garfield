@@ -21,6 +21,8 @@ AvalancheMicroscopic::AvalancheMicroscopic()
       m_viewer(NULL),
       m_useSaving(false),
       m_saver(NULL),
+      m_autoEndEvent(true),
+      m_skippingFactor(1),
       m_plotExcitations(true),
       m_plotIonisations(true),
       m_plotAttachments(true),
@@ -133,6 +135,11 @@ void AvalancheMicroscopic::DisableSaving() {
 
   m_saver = NULL;
   m_useSaving = false;
+}
+
+void AvalancheMicroscopic::SavingEndEvent() {
+	m_saver->FillEvent();
+  m_saver->Clear();
 }
 
 void AvalancheMicroscopic::EnableElectronEnergyHistogramming(TH1* histo) {
@@ -1739,9 +1746,8 @@ bool AvalancheMicroscopic::TransportElectron(const double x0, const double y0,
   // Save the drift paths and photon tracks.
   if (m_useSaving) {
     // Electrons
-    int skippingFactor = 1;
     for (int i=m_nElectronEndpoints; i--;) {
-      const int np = (GetNumberOfElectronDriftLinePoints(i)-2)/skippingFactor + 2; // save start and ending point for sure
+      const int np = (GetNumberOfElectronDriftLinePoints(i)-2)/m_skippingFactor + 2; // save start and ending point for sure
       if (np <= 0) continue;
       int jL;
       m_saver->NewElectronDriftLine(np, jL);
@@ -1762,8 +1768,10 @@ bool AvalancheMicroscopic::TransportElectron(const double x0, const double y0,
       m_saver->NewPhotonTrack(m_photons[i].x0, m_photons[i].y0, m_photons[i].z0, m_endpointsElectrons[i].t0,
                              m_photons[i].x1, m_photons[i].y1, m_photons[i].z1, m_endpointsElectrons[i].t);
     }
-    m_saver->FillEvent();
-    m_saver->Clear();
+    if (this->m_autoEndEvent) {
+      m_saver->FillEvent();
+      m_saver->Clear();
+    }
   }
   return true;
 }
