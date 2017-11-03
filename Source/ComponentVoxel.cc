@@ -257,7 +257,7 @@ bool ComponentVoxel::LoadData(const std::string filename, std::string format,
       if (!GetElement(x, y, z, i, j, k, xMirrored, yMirrored, zMirrored)) {
         std::cerr << m_className << "::LoadData:\n";
         std::cerr << "    Error reading line " << nLines << ".\n";
-        std::cerr << "    Point is outside mesh.\n";
+        std::cerr << "    Point is outside mesh (" << x << ", " << y << ", " << z << ").\n";
         bad = true;
         break;
       }
@@ -279,7 +279,7 @@ bool ComponentVoxel::LoadData(const std::string filename, std::string format,
       if (!GetElement(x, y, z, i, j, k, xMirrored, yMirrored, zMirrored)) {
         std::cerr << m_className << "::LoadData:\n";
         std::cerr << "    Error reading line " << nLines << ".\n";
-        std::cerr << "    Point is outside mesh.\n";
+        std::cerr << "    Point is outside mesh (" << x << ", " << y << ", " << z << ").\n";
         bad = true;
         break;
       }
@@ -324,7 +324,7 @@ bool ComponentVoxel::LoadData(const std::string filename, std::string format,
       if (!GetElement(x, y, z, i, j, k, xMirrored, yMirrored, zMirrored)) {
         std::cerr << m_className << "::LoadData:\n";
         std::cerr << "    Error reading line " << nLines << ".\n";
-        std::cerr << "    Point is outside mesh.\n";
+        std::cerr << "    Point is outside mesh (" << x << ", " << y << ", " << z << ").\n";
         bad = true;
         break;
       }
