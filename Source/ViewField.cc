@@ -5,6 +5,7 @@
 #include <cmath>
 
 #include <TROOT.h>
+#include <TH2F.h>
 #include <TAxis.h>
 
 #include "Plotting.hh"
@@ -196,6 +197,24 @@ void ViewField::SetNumberOfSamples2d(const unsigned int nx,
   } else {
     m_nSamples2dY = ny;
   }
+}
+
+TH2F *ViewField::PlotHist(const std::string& name, const std::string& option) {
+   TH2F *hist = new TH2F(name.c_str(), name.c_str(), m_nSamples2dX, m_pxmin, m_pxmax,
+         m_nSamples2dY, m_pymin, m_pymax);
+  if (!m_fPot) CreateFunction();
+  const int plotType = SetupFunction(option, m_fPot);
+
+   double step_x = (m_pxmax - m_pxmin) / (double)m_nSamples2dX;
+   double step_y = (m_pymax - m_pymin) / (double)m_nSamples2dY;
+   for (int xn = 0; xn < m_nSamples2dX; xn++) {
+      double x = m_pxmin + xn * step_x;
+      for (int yn = 0; yn < m_nSamples2dY; yn++) {
+         double y = m_pymin + yn * step_y;
+         hist->SetBinContent(xn, yn, m_fPot->Eval(x, y));
+      }
+   }
+   return hist;
 }
 
 void ViewField::PlotContour(const std::string& option) {
