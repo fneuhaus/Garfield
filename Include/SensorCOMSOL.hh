@@ -1,7 +1,7 @@
 // Sensor
 
-#ifndef G_SENSOR_H
-#define G_SENSOR_H
+#ifndef G_SENSOR_COMSOL_H
+#define G_SENSOR_COMSOL_H
 
 #include <vector>
 
@@ -10,16 +10,16 @@
 
 namespace Garfield {
 
-class Sensor {
+class SensorCOMSOL {
 
  public:
   // Constructor
-  Sensor();
+  SensorCOMSOL();
   // Destructor
-  ~Sensor() {}
+  ~SensorCOMSOL() {}
 
   // Add a component
-  void AddComponent(ComponentBase* comp);
+  void AddComponent(ComponentVoxel* comp);
   int GetNumberOfComponents() { return m_nComponents; }
   // Add an electrode
   void AddElectrode(ComponentBase* comp, std::string label);
@@ -115,7 +115,7 @@ class Sensor {
   // Components
   int m_nComponents;
   struct component {
-    ComponentBase* comp;
+    ComponentVoxel* comp;
   };
   std::vector<component> m_components;
   int m_lastComponent;

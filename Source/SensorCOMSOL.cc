@@ -2,7 +2,7 @@
 #include <fstream>
 #include <cmath>
 
-#include "Sensor.hh"
+#include "SensorCOMSOL.hh"
 #include "GarfieldConstants.hh"
 #include "Plotting.hh"
 #include "Numerics.hh"
@@ -10,9 +10,9 @@
 
 namespace Garfield {
 
-double Sensor::m_signalConversion = ElementaryCharge;
+double SensorCOMSOL::m_signalConversion = ElementaryCharge;
 
-Sensor::Sensor()
+SensorCOMSOL::SensorCOMSOL()
     : m_nComponents(0),
       m_lastComponent(-1),
       m_nElectrodes(0),
@@ -34,14 +34,14 @@ Sensor::Sensor()
       m_zMaxUser(0.),
       m_debug(false) {
 
-  m_className = "Sensor";
+  m_className = "SensorCOMSOL";
 
   m_components.clear();
   m_electrodes.clear();
   m_thresholdCrossings.clear();
 }
 
-void Sensor::ElectricField(const double x, const double y, const double z,
+void SensorCOMSOL::ElectricField(const double x, const double y, const double z,
                            double& ex, double& ey, double& ez, double& v,
                            Medium*& medium, int& status) {
 
@@ -67,7 +67,7 @@ void Sensor::ElectricField(const double x, const double y, const double z,
   }
 }
 
-void Sensor::ElectricField(const double x, const double y, const double z,
+void SensorCOMSOL::ElectricField(const double x, const double y, const double z,
                            double& ex, double& ey, double& ez, Medium*& medium,
                            int& status) {
 
@@ -92,7 +92,7 @@ void Sensor::ElectricField(const double x, const double y, const double z,
   }
 }
 
-void Sensor::MagneticField(const double x, const double y, const double z,
+void SensorCOMSOL::MagneticField(const double x, const double y, const double z,
                            double& bx, double& by, double& bz, int& status) {
 
   bx = by = bz = 0.;
@@ -107,7 +107,7 @@ void Sensor::MagneticField(const double x, const double y, const double z,
   }
 }
 
-void Sensor::WeightingField(const double x, const double y, const double z,
+void SensorCOMSOL::WeightingField(const double x, const double y, const double z,
                             double& wx, double& wy, double& wz,
                             const std::string label) {
 
@@ -125,7 +125,7 @@ void Sensor::WeightingField(const double x, const double y, const double z,
   }
 }
 
-double Sensor::WeightingPotential(const double x, const double y,
+double SensorCOMSOL::WeightingPotential(const double x, const double y,
                                   const double z, const std::string label) {
 
   double v = 0.;
@@ -138,7 +138,7 @@ double Sensor::WeightingPotential(const double x, const double y,
   return v;
 }
 
-bool Sensor::GetMedium(const double x, const double y, const double z,
+bool SensorCOMSOL::GetMedium(const double x, const double y, const double z,
                        Medium*& m) {
 
   m = NULL;
@@ -162,7 +162,7 @@ bool Sensor::GetMedium(const double x, const double y, const double z,
   return false;
 }
 
-bool Sensor::SetArea() {
+bool SensorCOMSOL::SetArea() {
 
   if (!GetBoundingBox(m_xMinUser, m_yMinUser, m_zMinUser, m_xMaxUser,
                       m_yMaxUser, m_zMaxUser)) {
@@ -191,7 +191,7 @@ bool Sensor::SetArea() {
   return true;
 }
 
-bool Sensor::SetArea(const double xmin, const double ymin, const double zmin,
+bool SensorCOMSOL::SetArea(const double xmin, const double ymin, const double zmin,
                      const double xmax, const double ymax, const double zmax) {
 
   if (fabs(xmax - xmin) < Small || fabs(ymax - ymin) < Small ||
@@ -224,7 +224,7 @@ bool Sensor::SetArea(const double xmin, const double ymin, const double zmin,
   return true;
 }
 
-bool Sensor::GetArea(double& xmin, double& ymin, double& zmin, double& xmax,
+bool SensorCOMSOL::GetArea(double& xmin, double& ymin, double& zmin, double& xmax,
                      double& ymax, double& zmax) {
 
   if (m_hasUserArea) {
@@ -251,7 +251,7 @@ bool Sensor::GetArea(double& xmin, double& ymin, double& zmin, double& xmax,
   return true;
 }
 
-bool Sensor::IsInArea(const double x, const double y, const double z) {
+bool SensorCOMSOL::IsInArea(const double x, const double y, const double z) {
 
   if (!m_hasUserArea) {
     if (!SetArea()) {
@@ -275,7 +275,7 @@ bool Sensor::IsInArea(const double x, const double y, const double z) {
   return false;
 }
 
-bool Sensor::IsWireCrossed(const double x0, const double y0, const double z0,
+bool SensorCOMSOL::IsWireCrossed(const double x0, const double y0, const double z0,
                            const double x1, const double y1, const double z1,
                            double& xc, double& yc, double& zc) {
 
@@ -288,7 +288,7 @@ bool Sensor::IsWireCrossed(const double x0, const double y0, const double z0,
   return false;
 }
 
-bool Sensor::IsInTrapRadius(const double q0, const double x0, 
+bool SensorCOMSOL::IsInTrapRadius(const double q0, const double x0, 
                             const double y0, double z0, double& xw,
                             double& yw, double& rw) {
 
@@ -300,7 +300,7 @@ bool Sensor::IsInTrapRadius(const double q0, const double x0,
   return false;
 }
 
-void Sensor::AddComponent(ComponentBase* comp) {
+void SensorCOMSOL::AddComponent(ComponentVoxel* comp) {
 
   if (!comp) {
     std::cerr << m_className << "::AddComponent:\n";
@@ -315,7 +315,7 @@ void Sensor::AddComponent(ComponentBase* comp) {
   if (m_nComponents == 1) m_lastComponent = 0;
 }
 
-void Sensor::AddElectrode(ComponentBase* comp, std::string label) {
+void SensorCOMSOL::AddElectrode(ComponentBase* comp, std::string label) {
 
   if (!comp) {
     std::cerr << m_className << "::AddElectrode:\n";
@@ -347,7 +347,7 @@ void Sensor::AddElectrode(ComponentBase* comp, std::string label) {
   ClearSignal();
 }
 
-void Sensor::Clear() {
+void SensorCOMSOL::Clear() {
 
   m_components.clear();
   m_nComponents = 0;
@@ -361,7 +361,7 @@ void Sensor::Clear() {
   m_hasUserArea = false;
 }
 
-bool Sensor::GetVoltageRange(double& vmin, double& vmax) {
+bool SensorCOMSOL::GetVoltageRange(double& vmin, double& vmax) {
 
   // We don't know the range yet.
   bool set = false;
@@ -394,7 +394,7 @@ bool Sensor::GetVoltageRange(double& vmin, double& vmax) {
   return true;
 }
 
-void Sensor::ClearSignal() {
+void SensorCOMSOL::ClearSignal() {
 
   for (int i = m_nElectrodes; i--;) {
     m_electrodes[i].charge = 0.;
@@ -407,7 +407,7 @@ void Sensor::ClearSignal() {
   m_nEvents = 0;
 }
 
-void Sensor::AddSignal(const double& q, const double& t, const double& dt,
+void SensorCOMSOL::AddSignal(const double& q, const double& t, const double& dt,
                        const double& x, const double& y, const double& z,
                        const double& vx, const double& vy, const double& vz) {
 
@@ -491,7 +491,7 @@ void Sensor::AddSignal(const double& q, const double& t, const double& dt,
   }
 }
 
-void Sensor::AddInducedCharge(const double q, const double x0, const double y0,
+void SensorCOMSOL::AddInducedCharge(const double q, const double x0, const double y0,
                               const double z0, const double x1, const double y1,
                               const double z1) {
 
@@ -516,7 +516,7 @@ void Sensor::AddInducedCharge(const double q, const double x0, const double y0,
   }
 }
 
-void Sensor::SetTimeWindow(const double tstart, const double tstep,
+void SensorCOMSOL::SetTimeWindow(const double tstart, const double tstep,
                            const int nsteps) {
 
   m_tStart = tstart;
@@ -554,7 +554,7 @@ void Sensor::SetTimeWindow(const double tstart, const double tstep,
   m_nEvents = 0;
 }
 
-double Sensor::GetElectronSignal(const std::string label, const int bin) {
+double SensorCOMSOL::GetElectronSignal(const std::string label, const int bin) {
 
   if (m_nEvents <= 0) return 0.;
   if (bin < 0 || bin >= m_nTimeBins) return 0.;
@@ -572,7 +572,7 @@ double Sensor::GetElectronSignal(const std::string label, const int bin) {
   return m_signalConversion * sig / (m_nEvents * m_tStep);
 }
 
-double Sensor::GetIonSignal(const std::string label, const int bin) {
+double SensorCOMSOL::GetIonSignal(const std::string label, const int bin) {
 
   if (m_nEvents <= 0) return 0.;
   if (bin < 0 || bin >= m_nTimeBins) return 0.;
@@ -589,7 +589,7 @@ double Sensor::GetIonSignal(const std::string label, const int bin) {
   return m_signalConversion * sig / (m_nEvents * m_tStep);
 }
 
-double Sensor::GetSignal(const std::string label, const int bin) {
+double SensorCOMSOL::GetSignal(const std::string label, const int bin) {
 
   if (m_nEvents <= 0) return 0.;
   if (bin < 0 || bin >= m_nTimeBins) return 0.;
@@ -606,7 +606,7 @@ double Sensor::GetSignal(const std::string label, const int bin) {
   return m_signalConversion * sig / (m_nEvents * m_tStep);
 }
 
-double Sensor::GetInducedCharge(const std::string label) {
+double SensorCOMSOL::GetInducedCharge(const std::string label) {
 
   if (m_nEvents <= 0) return 0.;
   double charge = 0.;
@@ -622,7 +622,7 @@ double Sensor::GetInducedCharge(const std::string label) {
   return charge / m_nEvents;
 }
 
-void Sensor::SetTransferFunction(double (*f)(double t)) {
+void SensorCOMSOL::SetTransferFunction(double (*f)(double t)) {
 
   if (!f) {
     std::cerr << m_className << "::SetTransferFunction:\n";
@@ -635,7 +635,7 @@ void Sensor::SetTransferFunction(double (*f)(double t)) {
   m_transferFunctionValues.clear();
 }
 
-void Sensor::SetTransferFunction(std::vector<double> times,
+void SensorCOMSOL::SetTransferFunction(std::vector<double> times,
                                  std::vector<double> values) {
 
   if (times.empty() || values.empty()) {
@@ -653,7 +653,7 @@ void Sensor::SetTransferFunction(std::vector<double> times,
   m_hasTransferFunction = true;
 }
 
-double Sensor::InterpolateTransferFunctionTable(double t) {
+double SensorCOMSOL::InterpolateTransferFunctionTable(double t) {
 
   if (m_transferFunctionTimes.empty() || m_transferFunctionValues.empty()) {
     return 0.;
@@ -682,14 +682,14 @@ double Sensor::InterpolateTransferFunctionTable(double t) {
              (m_transferFunctionTimes[iUp] - m_transferFunctionTimes[iLow]);
 }
 
-double Sensor::GetTransferFunction(const double t) {
+double SensorCOMSOL::GetTransferFunction(const double t) {
 
   if (!m_hasTransferFunction) return 0.;
   if (m_fTransfer) return m_fTransfer(t);
   return InterpolateTransferFunctionTable(t);
 }
 
-bool Sensor::ConvoluteSignal() {
+bool SensorCOMSOL::ConvoluteSignal() {
 
   if (!m_hasTransferFunction) {
     std::cerr << m_className << "::ConvoluteSignal:\n";
@@ -750,7 +750,7 @@ bool Sensor::ConvoluteSignal() {
   return true;
 }
 
-bool Sensor::IntegrateSignal() {
+bool SensorCOMSOL::IntegrateSignal() {
 
   if (m_nEvents <= 0) {
     std::cerr << m_className << "::IntegrateSignal:\n";
@@ -774,7 +774,7 @@ bool Sensor::IntegrateSignal() {
   return true;
 }
 
-void Sensor::SetNoiseFunction(double (*f)(double t)) {
+void SensorCOMSOL::SetNoiseFunction(double (*f)(double t)) {
 
   if (f == 0) {
     std::cerr << m_className << "::SetNoiseFunction:\n";
@@ -785,7 +785,7 @@ void Sensor::SetNoiseFunction(double (*f)(double t)) {
   m_hasNoiseFunction = true;
 }
 
-void Sensor::AddNoise() {
+void SensorCOMSOL::AddNoise() {
 
   if (!m_hasNoiseFunction) {
     std::cerr << m_className << "::AddNoise:\n";
@@ -807,7 +807,7 @@ void Sensor::AddNoise() {
   }
 }
 
-bool Sensor::ComputeThresholdCrossings(const double thr,
+bool SensorCOMSOL::ComputeThresholdCrossings(const double thr,
                                        const std::string label, int& n) {
 
   // Reset the list of threshold crossings.
@@ -959,7 +959,7 @@ bool Sensor::ComputeThresholdCrossings(const double thr,
   return true;
 }
 
-bool Sensor::GetThresholdCrossing(const int i, double& time, double& level,
+bool SensorCOMSOL::GetThresholdCrossing(const int i, double& time, double& level,
                                   bool& rise) {
 
   level = m_thresholdLevel;
@@ -976,7 +976,7 @@ bool Sensor::GetThresholdCrossing(const int i, double& time, double& level,
   return true;
 }
 
-bool Sensor::GetBoundingBox(double& xmin, double& ymin, double& zmin,
+bool SensorCOMSOL::GetBoundingBox(double& xmin, double& ymin, double& zmin,
                             double& xmax, double& ymax, double& zmax) {
 
   // We don't know the range yet
