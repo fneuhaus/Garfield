@@ -2,14 +2,14 @@
 #include <cmath>
 #include <string>
 
-#include "AvalancheMicroscopic.hh"
+#include "AvalancheMicroscopicCOMSOL.hh"
 #include "FundamentalConstants.hh"
 #include "GarfieldConstants.hh"
 #include "Random.hh"
 
 namespace Garfield {
 
-AvalancheMicroscopic::AvalancheMicroscopic()
+AvalancheMicroscopicCOMSOL::AvalancheMicroscopicCOMSOL()
     : m_sensor(NULL),
       m_nPhotons(0),
       m_nElectrons(0),
@@ -72,7 +72,7 @@ AvalancheMicroscopic::AvalancheMicroscopic()
       m_userHandleIonisation(0),
       m_debug(false) {
 
-  m_className = "AvalancheMicroscopic";
+  m_className = "AvalancheMicroscopicCOMSOL";
 
   m_stack.reserve(1000);
   m_endpointsElectrons.reserve(1000);
@@ -81,7 +81,7 @@ AvalancheMicroscopic::AvalancheMicroscopic()
 
 }
 
-void AvalancheMicroscopic::SetSensor(Sensor* s) {
+void AvalancheMicroscopicCOMSOL::SetSensor(SensorCOMSOL* s) {
 
   if (!s) {
     std::cerr << m_className << "::SetSensor:\n";
@@ -91,7 +91,7 @@ void AvalancheMicroscopic::SetSensor(Sensor* s) {
   m_sensor = s;
 }
 
-void AvalancheMicroscopic::EnablePlotting(ViewDrift* view) {
+void AvalancheMicroscopicCOMSOL::EnablePlotting(ViewDrift* view) {
 
   if (!view) {
     std::cerr << m_className << "::EnablePlotting:\n";
@@ -108,13 +108,13 @@ void AvalancheMicroscopic::EnablePlotting(ViewDrift* view) {
   }
 }
 
-void AvalancheMicroscopic::DisablePlotting() {
+void AvalancheMicroscopicCOMSOL::DisablePlotting() {
 
   m_viewer = NULL;
   m_usePlotting = false;
 }
 
-void AvalancheMicroscopic::EnableSaving(SaveDrift* save) {
+void AvalancheMicroscopicCOMSOL::EnableSaving(SaveDrift* save) {
 
   if (!save) {
     std::cerr << m_className << "::EnableSaving:\n";
@@ -131,18 +131,18 @@ void AvalancheMicroscopic::EnableSaving(SaveDrift* save) {
   }
 }
 
-void AvalancheMicroscopic::DisableSaving() {
+void AvalancheMicroscopicCOMSOL::DisableSaving() {
 
   m_saver = NULL;
   m_useSaving = false;
 }
 
-void AvalancheMicroscopic::SavingEndEvent() {
+void AvalancheMicroscopicCOMSOL::SavingEndEvent() {
 	m_saver->FillEvent();
   m_saver->Clear();
 }
 
-void AvalancheMicroscopic::EnableElectronEnergyHistogramming(TH1* histo) {
+void AvalancheMicroscopicCOMSOL::EnableElectronEnergyHistogramming(TH1* histo) {
 
   if (!histo) {
     std::cerr << m_className << "::EnableElectronEnergyHistogramming:\n";
@@ -154,12 +154,12 @@ void AvalancheMicroscopic::EnableElectronEnergyHistogramming(TH1* histo) {
   m_hasElectronEnergyHistogram = true;
 }
 
-void AvalancheMicroscopic::DisableElectronEnergyHistogramming() {
+void AvalancheMicroscopicCOMSOL::DisableElectronEnergyHistogramming() {
 
   m_hasElectronEnergyHistogram = false;
 }
 
-void AvalancheMicroscopic::EnableHoleEnergyHistogramming(TH1* histo) {
+void AvalancheMicroscopicCOMSOL::EnableHoleEnergyHistogramming(TH1* histo) {
 
   if (!histo) {
     std::cerr << m_className << "::EnableHoleEnergyHistogramming:\n";
@@ -171,12 +171,12 @@ void AvalancheMicroscopic::EnableHoleEnergyHistogramming(TH1* histo) {
   m_hasHoleEnergyHistogram = true;
 }
 
-void AvalancheMicroscopic::DisableHoleEnergyHistogramming() {
+void AvalancheMicroscopicCOMSOL::DisableHoleEnergyHistogramming() {
 
   m_hasHoleEnergyHistogram = false;
 }
 
-void AvalancheMicroscopic::SetDistanceHistogram(TH1* histo, const char opt) {
+void AvalancheMicroscopicCOMSOL::SetDistanceHistogram(TH1* histo, const char opt) {
 
   if (!histo) {
     std::cerr << m_className << "::SetDistanceHistogram:\n";
@@ -203,7 +203,7 @@ void AvalancheMicroscopic::SetDistanceHistogram(TH1* histo, const char opt) {
   }
 }
 
-void AvalancheMicroscopic::EnableDistanceHistogramming(const int type) {
+void AvalancheMicroscopicCOMSOL::EnableDistanceHistogramming(const int type) {
 
   // Check if this type of collision is already registered
   // for histogramming.
@@ -227,7 +227,7 @@ void AvalancheMicroscopic::EnableDistanceHistogramming(const int type) {
   }
 }
 
-void AvalancheMicroscopic::DisableDistanceHistogramming(const int type) {
+void AvalancheMicroscopicCOMSOL::DisableDistanceHistogramming(const int type) {
 
   if (m_distanceHistogramType.empty()) {
     std::cerr << m_className << "::DisableDistanceHistogramming:\n";
@@ -248,13 +248,13 @@ void AvalancheMicroscopic::DisableDistanceHistogramming(const int type) {
   std::cerr << "    Collision type " << type << " is not histogrammed.\n";
 }
 
-void AvalancheMicroscopic::DisableDistanceHistogramming() {
+void AvalancheMicroscopicCOMSOL::DisableDistanceHistogramming() {
 
   m_hasDistanceHistogram = false;
   m_distanceHistogramType.clear();
 }
 
-void AvalancheMicroscopic::EnableSecondaryEnergyHistogramming(TH1* histo) {
+void AvalancheMicroscopicCOMSOL::EnableSecondaryEnergyHistogramming(TH1* histo) {
 
   if (!histo) {
     std::cerr << m_className << "::EnableSecondaryEnergyHistogramming:\n";
@@ -266,12 +266,12 @@ void AvalancheMicroscopic::EnableSecondaryEnergyHistogramming(TH1* histo) {
   m_hasSecondaryHistogram = true;
 }
 
-void AvalancheMicroscopic::DisableSecondaryEnergyHistogramming() {
+void AvalancheMicroscopicCOMSOL::DisableSecondaryEnergyHistogramming() {
 
   m_hasSecondaryHistogram = false;
 }
 
-void AvalancheMicroscopic::SetCollisionSteps(const int n) {
+void AvalancheMicroscopicCOMSOL::SetCollisionSteps(const int n) {
 
   if (n <= 0) {
     std::cerr << m_className << "::SetCollisionSteps:\n";
@@ -284,7 +284,7 @@ void AvalancheMicroscopic::SetCollisionSteps(const int n) {
   m_nCollSkip = n;
 }
 
-void AvalancheMicroscopic::SetTimeWindow(const double t0, const double t1) {
+void AvalancheMicroscopicCOMSOL::SetTimeWindow(const double t0, const double t1) {
 
   if (fabs(t1 - t0) < Small) {
     std::cerr << m_className << "::SetTimeWindow:\n";
@@ -297,9 +297,9 @@ void AvalancheMicroscopic::SetTimeWindow(const double t0, const double t1) {
   m_hasTimeWindow = true;
 }
 
-void AvalancheMicroscopic::UnsetTimeWindow() { m_hasTimeWindow = false; }
+void AvalancheMicroscopicCOMSOL::UnsetTimeWindow() { m_hasTimeWindow = false; }
 
-void AvalancheMicroscopic::GetElectronEndpoint(const unsigned int i, double& x0,
+void AvalancheMicroscopicCOMSOL::GetElectronEndpoint(const unsigned int i, double& x0,
                                                double& y0, double& z0,
                                                double& t0, double& e0,
                                                double& x1, double& y1,
@@ -328,7 +328,7 @@ void AvalancheMicroscopic::GetElectronEndpoint(const unsigned int i, double& x0,
   status = m_endpointsElectrons[i].status;
 }
 
-void AvalancheMicroscopic::GetElectronEndpoint(
+void AvalancheMicroscopicCOMSOL::GetElectronEndpoint(
     const unsigned int i, double& x0, double& y0, double& z0, double& t0, double& e0,
     double& x1, double& y1, double& z1, double& t1, double& e1, double& dx1,
     double& dy1, double& dz1, int& status) const {
@@ -359,7 +359,7 @@ void AvalancheMicroscopic::GetElectronEndpoint(
   status = m_endpointsElectrons[i].status;
 }
 
-void AvalancheMicroscopic::GetHoleEndpoint(const unsigned int i, double& x0, double& y0,
+void AvalancheMicroscopicCOMSOL::GetHoleEndpoint(const unsigned int i, double& x0, double& y0,
                                            double& z0, double& t0, double& e0,
                                            double& x1, double& y1, double& z1,
                                            double& t1, double& e1,
@@ -387,7 +387,7 @@ void AvalancheMicroscopic::GetHoleEndpoint(const unsigned int i, double& x0, dou
   status = m_endpointsHoles[i].status;
 }
 
-unsigned int AvalancheMicroscopic::GetNumberOfElectronDriftLinePoints(const unsigned int i)
+unsigned int AvalancheMicroscopicCOMSOL::GetNumberOfElectronDriftLinePoints(const unsigned int i)
     const {
 
   if (i >= m_nElectronEndpoints) {
@@ -401,7 +401,7 @@ unsigned int AvalancheMicroscopic::GetNumberOfElectronDriftLinePoints(const unsi
   return m_endpointsElectrons[i].driftLine.size() + 2;
 }
 
-unsigned int AvalancheMicroscopic::GetNumberOfHoleDriftLinePoints(const unsigned int i) const {
+unsigned int AvalancheMicroscopicCOMSOL::GetNumberOfHoleDriftLinePoints(const unsigned int i) const {
 
   if (i >= m_nHoleEndpoints) {
     std::cerr << m_className << "::GetNumberOfHoleDriftLinePoints:\n";
@@ -414,7 +414,7 @@ unsigned int AvalancheMicroscopic::GetNumberOfHoleDriftLinePoints(const unsigned
   return m_endpointsHoles[i].driftLine.size() + 2;
 }
 
-void AvalancheMicroscopic::GetElectronDriftLinePoint(double& x, double& y,
+void AvalancheMicroscopicCOMSOL::GetElectronDriftLinePoint(double& x, double& y,
                                                      double& z, double& t,
                                                      const int ip,
                                                      const unsigned int iel) const {
@@ -448,7 +448,7 @@ void AvalancheMicroscopic::GetElectronDriftLinePoint(double& x, double& y,
   t = m_endpointsElectrons[iel].driftLine[ip - 1].t;
 }
 
-void AvalancheMicroscopic::GetHoleDriftLinePoint(double& x, double& y,
+void AvalancheMicroscopicCOMSOL::GetHoleDriftLinePoint(double& x, double& y,
                                                  double& z, double& t,
                                                  const int ip,
                                                  const unsigned int ih) const {
@@ -482,7 +482,7 @@ void AvalancheMicroscopic::GetHoleDriftLinePoint(double& x, double& y,
   t = m_endpointsHoles[ih].driftLine[ip - 1].t;
 }
 
-void AvalancheMicroscopic::GetPhoton(const unsigned int i, double& e, double& x0,
+void AvalancheMicroscopicCOMSOL::GetPhoton(const unsigned int i, double& e, double& x0,
                                      double& y0, double& z0, double& t0,
                                      double& x1, double& y1, double& z1,
                                      double& t1, int& status) const {
@@ -505,7 +505,7 @@ void AvalancheMicroscopic::GetPhoton(const unsigned int i, double& e, double& x0
   e = m_photons[i].energy;
 }
 
-void AvalancheMicroscopic::SetUserHandleStep(
+void AvalancheMicroscopicCOMSOL::SetUserHandleStep(
     void (*f)(double x, double y, double z, double t, double e, double dx,
               double dy, double dz, bool hole)) {
 
@@ -518,52 +518,52 @@ void AvalancheMicroscopic::SetUserHandleStep(
   m_hasUserHandleStep = true;
 }
 
-void AvalancheMicroscopic::UnsetUserHandleStep() {
+void AvalancheMicroscopicCOMSOL::UnsetUserHandleStep() {
 
   m_userHandleStep = 0;
   m_hasUserHandleStep = false;
 }
 
-void AvalancheMicroscopic::SetUserHandleAttachment(void (*f)(
+void AvalancheMicroscopicCOMSOL::SetUserHandleAttachment(void (*f)(
     double x, double y, double z, double t, int type, int level, Medium* m)) {
 
   m_userHandleAttachment = f;
   m_hasUserHandleAttachment = true;
 }
 
-void AvalancheMicroscopic::UnsetUserHandleAttachment() {
+void AvalancheMicroscopicCOMSOL::UnsetUserHandleAttachment() {
 
   m_userHandleAttachment = 0;
   m_hasUserHandleAttachment = false;
 }
 
-void AvalancheMicroscopic::SetUserHandleInelastic(void (*f)(
+void AvalancheMicroscopicCOMSOL::SetUserHandleInelastic(void (*f)(
     double x, double y, double z, double t, int type, int level, Medium* m)) {
 
   m_userHandleInelastic = f;
   m_hasUserHandleInelastic = true;
 }
 
-void AvalancheMicroscopic::UnsetUserHandleInelastic() {
+void AvalancheMicroscopicCOMSOL::UnsetUserHandleInelastic() {
 
   m_userHandleInelastic = 0;
   m_hasUserHandleInelastic = false;
 }
 
-void AvalancheMicroscopic::SetUserHandleIonisation(void (*f)(
+void AvalancheMicroscopicCOMSOL::SetUserHandleIonisation(void (*f)(
     double x, double y, double z, double t, int type, int level, Medium* m)) {
 
   m_userHandleIonisation = f;
   m_hasUserHandleIonisation = true;
 }
 
-void AvalancheMicroscopic::UnsetUserHandleIonisation() {
+void AvalancheMicroscopicCOMSOL::UnsetUserHandleIonisation() {
 
   m_userHandleIonisation = 0;
   m_hasUserHandleIonisation = false;
 }
 
-bool AvalancheMicroscopic::DriftElectron(const double x0, const double y0,
+bool AvalancheMicroscopicCOMSOL::DriftElectron(const double x0, const double y0,
                                          const double z0, const double t0,
                                          const double e0, const double dx0,
                                          const double dy0, const double dz0) {
@@ -580,7 +580,7 @@ bool AvalancheMicroscopic::DriftElectron(const double x0, const double y0,
   return TransportElectron(x0, y0, z0, t0, e0, dx0, dy0, dz0, false, false);
 }
 
-bool AvalancheMicroscopic::AvalancheElectron(const double x0, const double y0,
+bool AvalancheMicroscopicCOMSOL::AvalancheElectron(const double x0, const double y0,
                                              const double z0, const double t0,
                                              const double e0, const double dx0,
                                              const double dy0,
@@ -598,7 +598,7 @@ bool AvalancheMicroscopic::AvalancheElectron(const double x0, const double y0,
   return TransportElectron(x0, y0, z0, t0, e0, dx0, dy0, dz0, true, false);
 }
 
-bool AvalancheMicroscopic::TransportElectron(const double x0, const double y0,
+bool AvalancheMicroscopicCOMSOL::TransportElectron(const double x0, const double y0,
                                              const double z0, const double t0,
                                              const double e0, const double dx0,
                                              const double dy0, const double dz0,
@@ -1118,10 +1118,6 @@ bool AvalancheMicroscopic::TransportElectron(const double x0, const double y0,
           ex = -ex;
           ey = -ey;
           ez = -ez;
-        }
-
-        if (z < -30e-4) {
-          status = -1;
         }
 
         // Check if the electron is still inside a drift medium.
@@ -1780,7 +1776,7 @@ bool AvalancheMicroscopic::TransportElectron(const double x0, const double y0,
   return true;
 }
 
-void AvalancheMicroscopic::TransportPhoton(const double x0, const double y0,
+void AvalancheMicroscopicCOMSOL::TransportPhoton(const double x0, const double y0,
                                            const double z0, const double t0,
                                            const double e0) {
 
@@ -1990,7 +1986,7 @@ void AvalancheMicroscopic::TransportPhoton(const double x0, const double y0,
   ++m_nPhotons;
 }
 
-void AvalancheMicroscopic::ComputeRotationMatrix(
+void AvalancheMicroscopicCOMSOL::ComputeRotationMatrix(
     const double bx, const double by, const double bz, const double bmag,
     const double ex, const double ey, const double ez) {
 
@@ -2029,7 +2025,7 @@ void AvalancheMicroscopic::ComputeRotationMatrix(
   }
 }
 
-void AvalancheMicroscopic::RotateGlobal2Local(double& dx, double& dy,
+void AvalancheMicroscopicCOMSOL::RotateGlobal2Local(double& dx, double& dy,
                                               double& dz) {
 
   const double dx1 = m_rb11 * dx + m_rb12 * dy + m_rb13 * dz;
@@ -2041,7 +2037,7 @@ void AvalancheMicroscopic::RotateGlobal2Local(double& dx, double& dy,
   dz = m_rx32 * dy1 + m_rx33 * dz1;
 }
 
-void AvalancheMicroscopic::RotateLocal2Global(double& dx, double& dy,
+void AvalancheMicroscopicCOMSOL::RotateLocal2Global(double& dx, double& dy,
                                               double& dz) {
 
   const double dx1 = dx;

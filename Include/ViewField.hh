@@ -2,6 +2,7 @@
 #define G_VIEW_FIELD
 
 #include <TCanvas.h>
+#include <TH2F.h>
 #include <TF2.h>
 #include <TF1.h>
 
@@ -39,6 +40,7 @@ class ViewField {
   // Rotate the viewing plane
   void Rotate(double angle);
 
+  TH2F *PlotHist(const std::string& name="hist", const std::string& option = "v");
   void PlotContour(const std::string& option = "v");
   void PlotSurface(const std::string& option = "v");
   void Plot(const std::string& option = "v", 

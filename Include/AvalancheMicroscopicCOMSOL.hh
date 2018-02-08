@@ -1,28 +1,28 @@
 // Calculate electron avalanches using microscopic tracking
 
-#ifndef G_AVALANCHE_MICROSCOPIC_H
-#define G_AVALANCHE_MICROSCOPIC_H
+#ifndef G_AVALANCHE_MICROSCOPIC_COMSOL_H
+#define G_AVALANCHE_MICROSCOPIC_COMSOL_H
 
 #include <vector>
 #include <string>
 
 #include <TH1.h>
 
-#include "Sensor.hh"
+#include "SensorCOMSOL.hh"
 #include "ViewDrift.hh"
 #include "SaveDrift.hh"
 
 namespace Garfield {
 
-class AvalancheMicroscopic {
+class AvalancheMicroscopicCOMSOL {
 
  public:
   // Constructor
-  AvalancheMicroscopic();
+  AvalancheMicroscopicCOMSOL();
   // Destructor
-  ~AvalancheMicroscopic() {}
+  ~AvalancheMicroscopicCOMSOL() {}
 
-  void SetSensor(Sensor* sensor);
+  void SetSensor(SensorCOMSOL* sensor);
 
   // Switch on/off drift line plotting
   void EnablePlotting(ViewDrift* view);
@@ -178,7 +178,7 @@ class AvalancheMicroscopic {
  private:
   std::string m_className;
 
-  Sensor* m_sensor;
+  SensorCOMSOL* m_sensor;
 
   struct point {
     double x, y, z, t;
