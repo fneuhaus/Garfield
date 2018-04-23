@@ -19,7 +19,7 @@ class Sensor {
   ~Sensor() {}
 
   // Add a component
-  void AddComponent(ComponentVoxel* comp);
+  void AddComponent(ComponentBase* comp);
   int GetNumberOfComponents() { return m_nComponents; }
   // Add an electrode
   void AddElectrode(ComponentBase* comp, std::string label);
@@ -115,7 +115,7 @@ class Sensor {
   // Components
   int m_nComponents;
   struct component {
-    ComponentVoxel* comp;
+    ComponentBase* comp;
   };
   std::vector<component> m_components;
   int m_lastComponent;
